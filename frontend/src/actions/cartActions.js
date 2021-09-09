@@ -20,5 +20,4 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
     // save the netrie cart in localStorage after dispatch
     // we can only save strings in localStroage, need to parse back to js when we take out
     localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
-    console.log(getState());
 }
