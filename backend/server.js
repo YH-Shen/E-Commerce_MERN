@@ -7,6 +7,7 @@ import colors from "colors";
 import connectDB from "./config/db.js";
 
 import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
@@ -15,6 +16,8 @@ connectDB();
 
 const app = express();
 
+
+// enable reciving json data in body
 app.use(express.json());
 
 // create route
@@ -24,6 +27,9 @@ app.get("/", (req, res) => {
 
 // mount product routes
 app.use("/api/products", productRoutes);
+// mount user routes
+app.use("/api/users", userRoutes);
+
 
 
 // custom error handling middleware

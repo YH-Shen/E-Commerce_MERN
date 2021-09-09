@@ -5,13 +5,13 @@ import Product from "../models/productModel.js";
 //      exceptions inside of async express routes and passing 
 //      them to your express error handlers.
 
-// @desc     Fetch single product
-// @routes   Get /api/products/:id
+// @desc     Fetch all products
+// @routes   Get /api/products/
 // @access   Public Route
 const getProducts = asyncHandler(async (req, res) => {
     const products = await Product.find({});
     res.json(products);
-})
+});
 
 // @desc     Fetch single product
 // @routes   Get /api/products/:id
