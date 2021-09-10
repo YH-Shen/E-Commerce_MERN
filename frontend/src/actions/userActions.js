@@ -1,4 +1,5 @@
 import axios from "axios"
+import { CART_CLEAR_ITEMS } from "../constants/cartConstants"
 import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants"
 
 export const login = (email, password) => async (dispatch) => {
@@ -44,8 +45,12 @@ export const logout = () => (dispatch) => {
 
     // remove from local storage
     localStorage.removeItem("userInfo");
+    
     // reducer returns empty obj
     dispatch({ type: USER_LOGOUT });
+
+    // remove cart
+    dispatch({type: CART_CLEAR_ITEMS});
 }
 
 export const register = (name, email, password) => async (dispatch) => {

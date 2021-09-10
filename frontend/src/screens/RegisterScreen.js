@@ -38,7 +38,7 @@ const RegisterScreen = ({ location, history }) => {
         e.preventDefault();
         // clear error messages
         setMessage(null);
-        error = null;
+        
         // check password // 
         if (password !== confirmPassword) {
             setMessage("Passwords do not match");
