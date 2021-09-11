@@ -3,6 +3,7 @@ import { CART_CLEAR_ITEMS } from "../constants/cartConstants"
 import { 
     USER_LIST_FAIL,
     USER_LIST_REQUEST,
+    USER_LIST_RESET,
     USER_LIST_SUCCESS,
     USER_LOGIN_FAIL, 
     USER_LOGIN_REQUEST, 
@@ -62,6 +63,10 @@ export const logout = () => (dispatch) => {
 
     // remove cart
     dispatch({type: CART_CLEAR_ITEMS});
+
+    // reset user list
+    dispatch({type: USER_LIST_RESET});
+
 }
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -116,11 +121,10 @@ export const listUsers = () => async (dispatch, getState) => {
             type: USER_LIST_REQUEST
         })
 
-        // get token
+        // get userInfo
         const { 
             userLogin: { userInfo },
         } = getState();
-        console.log("getState", getState());
 
         // send data in headers
         const config = {

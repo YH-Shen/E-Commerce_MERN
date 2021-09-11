@@ -6,7 +6,7 @@ import Message from "../components/Message/Message";
 import Loader from '../components/Loader/Loader';
 import { listUsers } from '../actions/userActions';
 
-const UserListScreen = () => {
+const UserListScreen = ({ history }) => {
     // pass in action
     const dispatch = useDispatch();
     // pass in state
@@ -14,22 +14,34 @@ const UserListScreen = () => {
     // get loading, error, adn users from state
     const { loading, error, users } = userList;
 
+    const userLogin = useSelector( state => state.userLogin);
+
+    // get loading, error, adn users from state
+    const { userInfo } = userLogin;
+
+
     // useEffect to dispatch action
     useEffect(() => {
-        dispatch(listUsers());
-    }, [dispatch]);
+        // only dispatch users if user is admin
+        if (userInfo && userInfo.isAdmin) {
+            dispatch(listUsers());
+        } else {
+            // else redirect user to home
+            history.push("/login");
+        }
+        
+    }, [dispatch, history, userInfo]);
 
     const deleteHandler = (id) => {
         console.log("delete user");
     }
-
     return (
         <>
             <h1>Users</h1>
             {loading ? <Loader /> 
                 : error 
                 ? <Message variant="danger">{error}</Message> : (
-                    <Table tripped bordered hover responsive className="table-sm">
+                    <Table striped bordered hover responsive className="table-sm">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -47,12 +59,12 @@ const UserListScreen = () => {
                                     <td><a href={`mailto:${user.email}`}>{user.email}</a></td>
                                     <td>
                                         {user.isAdmin 
-                                            ? (<i className="fas fa-check" style={{color: "green"}}/>)
-                                            : (<i className="fas fa-times" style={{color: "red"}}/>)}
+                                            ? (<i className="fas fa-check" style={{"color": "green"}}/>)
+                                            : (<i className="fas fa-times" style={{"color": "red"}}/>)}
                                     </td>
                                     
                                     <td>
-                                        <LinkContainer to={`/user/${user._id}/edit`}>
+                                        <LinkContainer to={`/admin/${user._id}/edit`}>
                                             <Button variant="light" className="btn-sm" >
                                                 <i className="fas fa-edit"/>
                                             </Button>

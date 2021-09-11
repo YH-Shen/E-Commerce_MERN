@@ -20,8 +20,7 @@ const LoginScreen = ({ location, history }) => {
 
     // url query string in location.search
     const redirect = location.search ? location.search.split("=")[1] : "/";
-    console.log(location);
-    console.log("userInfo",userInfo);
+    
     // redirect if already logged in
     useEffect(() => {
         if (userInfo) {
