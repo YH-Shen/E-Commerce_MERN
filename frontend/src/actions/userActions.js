@@ -4,6 +4,9 @@ import {
     USER_DELETE_FAIL,
     USER_DELETE_REQUEST,
     USER_DELETE_SUCCESS,
+    USER_DETAILS_FAIL,
+    USER_DETAILS_REQUEST,
+    USER_DETAILS_SUCCESS,
     USER_LIST_FAIL,
     USER_LIST_REQUEST,
     USER_LIST_RESET,
@@ -180,10 +183,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         }
 
         // hit the route on the backend
-        const { data } = await axios.delete(
-            `/api/users/${id}`, 
-            config,
-        )
+        await axios.delete( `/api/users/${id}`, config);
         // dispatch user_delete_success after making request
         dispatch({ type:  USER_DELETE_SUCCESS });
 
@@ -200,3 +200,40 @@ export const deleteUser = (id) => async (dispatch, getState) => {
     
     }
 }
+
+export const getUserDetails = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_DETAILS_REQUEST,
+        })
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+  
+      const { data } = await axios.get(`/api/users/${id}`, config);
+  
+      dispatch({
+        type: USER_DETAILS_SUCCESS,
+        payload: data,
+      })
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      if (message === 'Not authorized, token failed') {
+        dispatch(logout());
+      }
+      dispatch({
+        type: USER_DETAILS_FAIL,
+        payload: message,
+      })
+    }
+  }

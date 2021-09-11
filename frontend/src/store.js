@@ -5,6 +5,7 @@ import { productDetailsReducer, productListReducer } from "./reducers/productRed
 import { cartReducer } from "./reducers/cartReducers";
 import { 
     userDeleteReducer, 
+    userDetailsReducer, 
     userListReducer, 
     userLoginReducer, 
     userRegisterReducer } from "./reducers/userReducers";
@@ -16,7 +17,8 @@ const reducer = combineReducers({
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
     userList: userListReducer,
-    userDelete: userDeleteReducer
+    userDelete: userDeleteReducer,
+    userDetail: userDetailsReducer,
 });
 
 // load localStorage initially in store.js
