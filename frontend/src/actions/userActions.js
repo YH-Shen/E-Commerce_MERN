@@ -110,7 +110,7 @@ export const register = (name, email, password) => async (dispatch) => {
     }
 }
 
-export const listUsers = () => async (dispatch) => {
+export const listUsers = () => async (dispatch, getState) => {
     try {
         dispatch({
             type: USER_LIST_REQUEST
