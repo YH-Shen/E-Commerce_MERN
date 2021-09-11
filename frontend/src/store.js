@@ -18,7 +18,7 @@ const reducer = combineReducers({
     userRegister: userRegisterReducer,
     userList: userListReducer,
     userDelete: userDeleteReducer,
-    userDetail: userDetailsReducer,
+    userDetails: userDetailsReducer,
 });
 
 // load localStorage initially in store.js
