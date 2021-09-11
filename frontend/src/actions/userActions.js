@@ -1,6 +1,9 @@
 import axios from "axios"
 import { CART_CLEAR_ITEMS } from "../constants/cartConstants"
 import { 
+    USER_DELETE_FAIL,
+    USER_DELETE_REQUEST,
+    USER_DELETE_SUCCESS,
     USER_LIST_FAIL,
     USER_LIST_REQUEST,
     USER_LIST_RESET,
@@ -148,6 +151,46 @@ export const listUsers = () => async (dispatch, getState) => {
         // if error, then:
         dispatch(({
             type: USER_LIST_FAIL,
+            // want the backend error msg if exist,  
+            // else show the generic error msg
+            payload: error.response && error.response.data.message 
+                        ? error.response.data.message 
+                        : error.response,
+        }))
+    
+    }
+}
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_DELETE_REQUEST
+        })
+
+        // get userInfo
+        const { 
+            userLogin: { userInfo },
+        } = getState();
+
+        // pass authorization token in headers
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`, 
+            }
+        }
+
+        // hit the route on the backend
+        const { data } = await axios.delete(
+            `/api/users/${id}`, 
+            config,
+        )
+        // dispatch user_delete_success after making request
+        dispatch({ type:  USER_DELETE_SUCCESS });
+
+    } catch (error) {
+        // if error, then:
+        dispatch(({
+            type: USER_DELETE_FAIL,
             // want the backend error msg if exist,  
             // else show the generic error msg
             payload: error.response && error.response.data.message 

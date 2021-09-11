@@ -3,7 +3,11 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { productDetailsReducer, productListReducer } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducers";
-import { userListReducer, userLoginReducer, userRegisterReducer } from "./reducers/userReducers";
+import { 
+    userDeleteReducer, 
+    userListReducer, 
+    userLoginReducer, 
+    userRegisterReducer } from "./reducers/userReducers";
 
 const reducer = combineReducers({
     productList: productListReducer,
@@ -11,7 +15,8 @@ const reducer = combineReducers({
     cart: cartReducer,
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
-    userList: userListReducer
+    userList: userListReducer,
+    userDelete: userDeleteReducer
 });
 
 // load localStorage initially in store.js
