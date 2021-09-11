@@ -8,7 +8,9 @@ import {
     userDetailsReducer, 
     userListReducer, 
     userLoginReducer, 
-    userRegisterReducer } from "./reducers/userReducers";
+    userRegisterReducer, 
+    userUpdateReducer
+} from "./reducers/userReducers";
 
 const reducer = combineReducers({
     productList: productListReducer,
@@ -19,6 +21,7 @@ const reducer = combineReducers({
     userList: userListReducer,
     userDelete: userDeleteReducer,
     userDetails: userDetailsReducer,
+    userUpdate: userUpdateReducer,
 });
 
 // load localStorage initially in store.js

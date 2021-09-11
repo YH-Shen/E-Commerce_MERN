@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 import { CART_CLEAR_ITEMS } from "../constants/cartConstants"
 import { 
     USER_DELETE_FAIL,
@@ -6,6 +6,7 @@ import {
     USER_DELETE_SUCCESS,
     USER_DETAILS_FAIL,
     USER_DETAILS_REQUEST,
+    USER_DETAILS_RESET,
     USER_DETAILS_SUCCESS,
     USER_LIST_FAIL,
     USER_LIST_REQUEST,
@@ -17,7 +18,10 @@ import {
     USER_LOGOUT, 
     USER_REGISTER_FAIL, 
     USER_REGISTER_REQUEST, 
-    USER_REGISTER_SUCCESS 
+    USER_REGISTER_SUCCESS, 
+    USER_UPDATE_FAIL, 
+    USER_UPDATE_REQUEST,
+    USER_UPDATE_SUCCESS
 } from "../constants/userConstants"
 
 export const login = (email, password) => async (dispatch) => {
@@ -237,4 +241,48 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
             payload: message,
         })
     }
-  }
+}
+
+export const updateUser = (user) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_UPDATE_REQUEST
+        })
+
+        // get userInfo
+        const { 
+            userLogin: { userInfo },
+        } = getState();
+
+        // pass authorization token, and contentType in headers
+        const config = {
+            headers: {
+                "ContentType": "application/json",
+                Authorization: `Bearer ${userInfo.token}`, 
+            }
+        }
+
+        // hit the route on the backend
+        const { data } = await axios.put( `/api/users/${user._id}`, user, config);
+        // dispatch user_delete_success after making request
+        dispatch({ type:  USER_UPDATE_SUCCESS });
+
+        // also pass in updated data into user detail
+        dispatch({ type:  USER_DETAILS_SUCCESS, payload: data });
+
+        dispatch({ type:  USER_DETAILS_RESET });
+
+        
+    } catch (error) {
+        // if error, then:
+        dispatch(({
+            type: USER_UPDATE_FAIL,
+            // want the backend error msg if exist,  
+            // else show the generic error msg
+            payload: error.response && error.response.data.message 
+                        ? error.response.data.message 
+                        : error.response,
+        }))
+    
+    }
+}

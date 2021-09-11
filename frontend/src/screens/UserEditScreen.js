@@ -5,7 +5,8 @@ import {useDispatch, useSelector} from "react-redux";
 import Message from "../components/Message/Message";
 import FormContainer from '../components/FormContainer/FormContainer';
 import Loader from '../components/Loader/Loader';
-import { getUserDetails } from '../actions/userActions';
+import { getUserDetails, updateUser } from '../actions/userActions';
+import { USER_UPDATE_RESET } from '../constants/userConstants';
 
 const UserEditScreen = ({ match, history }) => {
 
@@ -21,26 +22,50 @@ const UserEditScreen = ({ match, history }) => {
     const userDetails = useSelector((state) => state.userDetails);
     const { loading, error, user } = userDetails;
 
-    
+
+    // check if user update is successful
+    const userUpdate = useSelector((state) => state.userUpdate);
+    const { 
+        loading: loadingUpdate, 
+        error: errorUpdate,
+        success: successUpdate  
+    } = userUpdate;
     
     useEffect(() => {
-        // check if already an user
-        // if no user exists or user id does not match
-
-        if (!user || user._id !== userId) {
-            // fetch the user
-            dispatch(getUserDetails(userId));
+        // if user update is successful, reset user update state
+        //  and redirect to user list
+        if (successUpdate) {
+            dispatch({ type: USER_UPDATE_RESET });
+            history.push("/admin/userlist");
         } else {
-            // else display user info
-            setName(user.name);
-            setEmail(user.email);
-            setIsAdmin(user.isAdmin);
+            // not updated yet, do all the update stuff
+
+            // check if already an user
+            // if no user exists or user id does not match
+            if (!user || user._id !== userId) {
+                // fetch the user
+                dispatch(getUserDetails(userId));
+            } else {
+                // else display user info
+                setName(user.name);
+                setEmail(user.email);
+                setIsAdmin(user.isAdmin);
+            }
         }
-    }, [dispatch, user, userId]);
+
+        
+    }, [dispatch, history, user, userId, successUpdate]);
 
 
     const submitHandler = (e) => {
         e.preventDefault();
+        // updateUser takes in the user obj
+        // pass in userID and everything in the form
+        console.log("userId", userId);
+        console.log("name", name);
+        console.log("email", email);
+        console.log("isAdmin", isAdmin);
+        dispatch(updateUser({ _id: userId, name, email, isAdmin }));
         
     }
 
@@ -52,6 +77,8 @@ const UserEditScreen = ({ match, history }) => {
             </Link>
             <FormContainer>
                 <h1>Edit User</h1>
+                {loadingUpdate && <Loader />}
+                {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
                 {/* check for laoding and error */}
                 {loading 
                     ? <Loader /> 
