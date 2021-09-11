@@ -1,6 +1,17 @@
 import axios from "axios"
 import { CART_CLEAR_ITEMS } from "../constants/cartConstants"
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants"
+import { 
+    USER_LIST_FAIL,
+    USER_LIST_REQUEST,
+    USER_LIST_SUCCESS,
+    USER_LOGIN_FAIL, 
+    USER_LOGIN_REQUEST, 
+    USER_LOGIN_SUCCESS, 
+    USER_LOGOUT, 
+    USER_REGISTER_FAIL, 
+    USER_REGISTER_REQUEST, 
+    USER_REGISTER_SUCCESS 
+} from "../constants/userConstants"
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -89,6 +100,50 @@ export const register = (name, email, password) => async (dispatch) => {
         // if error, then:
         dispatch(({
             type: USER_REGISTER_FAIL,
+            // want the backend error msg if exist,  
+            // else show the generic error msg
+            payload: error.response && error.response.data.message 
+                        ? error.response.data.message 
+                        : error.response,
+        }))
+    
+    }
+}
+
+export const listUsers = () => async (dispatch) => {
+    try {
+        dispatch({
+            type: USER_LIST_REQUEST
+        })
+
+        // get token
+        const { 
+            userLogin: { userInfo },
+        } = getState();
+        console.log("getState", getState());
+
+        // send data in headers
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`, 
+            }
+        }
+
+        const { data } = await axios.get(
+            "/api/users", 
+            config,
+        )
+        // dispatch user_list_success after making request
+        //  and pass in all the data through payload which should be user list
+        dispatch({
+            type:  USER_LIST_SUCCESS,
+            payload: data,
+        });
+
+    } catch (error) {
+        // if error, then:
+        dispatch(({
+            type: USER_LIST_FAIL,
             // want the backend error msg if exist,  
             // else show the generic error msg
             payload: error.response && error.response.data.message 
