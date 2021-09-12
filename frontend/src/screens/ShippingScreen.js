@@ -13,12 +13,12 @@ const ShippingScreen = () => {
     }
     return (
         <div>
-            <h1>Under Construction...</h1>
+            <h1>Check Out Under Construction...</h1>
             <Message variant="success">
                 I am going to pretend that it's been paid for now!<br/>
                 And nothing will be shipping to you XD
             </Message>
-            <Button onClick={emptyCartHandler}>Empty My Cart</Button>
+            <Button onClick={emptyCartHandler}>Prentend to Check Out and Empty My Cart</Button>
         </div>
     )
 }

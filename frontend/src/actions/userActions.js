@@ -20,6 +20,9 @@ import {
     USER_REGISTER_REQUEST, 
     USER_REGISTER_SUCCESS, 
     USER_UPDATE_FAIL, 
+    USER_UPDATE_PROFILE_FAIL, 
+    USER_UPDATE_PROFILE_REQUEST, 
+    USER_UPDATE_PROFILE_SUCCESS, 
     USER_UPDATE_REQUEST,
     USER_UPDATE_SUCCESS
 } from "../constants/userConstants"
@@ -238,6 +241,49 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         }
         dispatch({
             type: USER_DETAILS_FAIL,
+            payload: message,
+        })
+    }
+}
+
+export const updateUserProfile = (user) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_UPDATE_PROFILE_REQUEST,
+        })
+  
+        const {
+            userLogin: { userInfo },
+        } = getState();
+  
+        const config = {
+            headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+            },
+        }
+  
+        const { data } = await axios.put(`/api/users/profile`, user, config);
+  
+        dispatch({
+            type: USER_UPDATE_PROFILE_SUCCESS,
+            payload: data,
+        });
+
+        // log in with new user info
+        dispatch({
+            type: USER_LOGIN_SUCCESS,
+            payload: data,
+        });
+        // reset local storage
+        localStorage.setItem("userInfo", JSON.stringify(data));
+
+    } catch (error) {
+        const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+        dispatch({
+            type: USER_UPDATE_PROFILE_FAIL,
             payload: message,
         })
     }

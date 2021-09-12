@@ -9,7 +9,8 @@ import {
     getUsers,
     deleteUser, 
     getUserById,
-    updateUser
+    updateUser,
+    updateUserProfile
 } from "../controllers/userController.js";
 import { protect, isAdminCheck } from "../middleware/authMiddleware.js";
 
@@ -18,7 +19,10 @@ router.route("/").post(registerUser).get(protect, isAdminCheck, getUsers);
 // login
 router.post("/login", authUser);
 // protect this route with middleware input
-router.route("/profile").get(protect, getUserProfile);
+router
+    .route("/profile")
+    .get(protect, getUserProfile)
+    .put(protect, updateUserProfile);
 
 // delete user, get user by id, update user
 router

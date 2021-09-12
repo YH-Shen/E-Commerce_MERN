@@ -21,3 +21,7 @@ h4 {
 .rating span {
     margin: 0.1rem;
 }
+
+#createProduct-btn > i {
+    margin-right: 0.2rem;
+}

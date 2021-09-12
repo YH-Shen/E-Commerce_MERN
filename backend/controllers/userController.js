@@ -98,6 +98,41 @@ const getUserProfile = asyncHandler(async (req, res) => {
     // res.send("success");
 })
 
+// @desc     Update user profile 
+// @routes   PUT /api/users/profile
+// @access   Private Route
+const updateUserProfile = asyncHandler(async (req, res) => {
+
+    // find user
+    const user = await User.findById( req.user._id );
+
+    if (user) {
+
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        // if password is sent
+        if (req.body.password) {
+            user.password = req.body.password
+        }
+        // use save method so that the presave encryption would be called
+        const updatedUser = await user.save();
+
+        // return data for the logged in user
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+            token: generateToken(updatedUser._id), 
+        })
+    } else {
+        res.status(404);
+        throw new Error("User not found");
+    }
+
+    // res.send("success");
+})
+
 // @desc     Get all users
 // @routes   GET /api/users
 // @access   Private Route/Admin only
@@ -181,7 +216,8 @@ const updateUser = asyncHandler(async (req, res) => {
 
 export { 
     authUser, 
-    getUserProfile, 
+    getUserProfile,
+    updateUserProfile, 
     registerUser, 
     getUsers, 
     deleteUser, 
