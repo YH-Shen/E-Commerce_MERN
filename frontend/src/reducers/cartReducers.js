@@ -1,9 +1,14 @@
-import { CART_ADD_ITEM, CART_CLEAR_ITEMS, CART_REMOVE_ITEM } from "../constants/cartConstants";
+import { 
+    CART_ADD_ITEM, 
+    CART_CLEAR_ITEMS, 
+    CART_REMOVE_ITEM, 
+    CART_UPDATE_ITEM, 
+} from "../constants/cartConstants";
 
 
 export const cartReducer = (state ={ cartItems: [] }, action) => {
     switch(action.type) {
-        case CART_ADD_ITEM:
+        case CART_ADD_ITEM: {
             const item = action.payload;
 
             // if item added already exist in the cart
@@ -12,6 +17,9 @@ export const cartReducer = (state ={ cartItems: [] }, action) => {
 
             if (existItem) {
                 // if item exist, use the payload, else stays the same
+                // also accumulate the qty
+                item.qty += existItem.qty;
+
                 return {
                     ...state,
                     cartItems: state.cartItems.map(x => 
@@ -25,7 +33,30 @@ export const cartReducer = (state ={ cartItems: [] }, action) => {
                 }
 
             }
+        }
+        case CART_UPDATE_ITEM: {
             
+            const item = action.payload;
+    
+            // if item added already exist in the cart
+            //  findout by comparing product id
+            const existItem = state.cartItems.find(x => x.product === item.product);
+    
+            if (existItem) {
+                // if item exist, use the payload, else stays the same
+                return {
+                    ...state,
+                    cartItems: state.cartItems.map(x => 
+                        x.product === existItem.product ? item : x)
+                }
+            } else {
+                return {
+                    ...state,
+                    cartItems: [...state.cartItems, item],
+                    error: item
+                }
+            }
+        }
 
         case CART_REMOVE_ITEM:
             return { 

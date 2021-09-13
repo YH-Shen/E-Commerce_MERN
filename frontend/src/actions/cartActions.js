@@ -1,21 +1,36 @@
 import axios from "axios";
-import { CART_ADD_ITEM, CART_CLEAR_ITEMS, CART_REMOVE_ITEM } from "../constants/cartConstants";
+import { CART_ADD_ITEM, CART_CLEAR_ITEMS, CART_REMOVE_ITEM, CART_UPDATE_ITEM } from "../constants/cartConstants";
 
 
-export const addToCart = (id, qty) => async (dispatch, getState) => {
+export const addToCart = (id, qty, action="add") => async (dispatch, getState) => {
     const { data } = await axios.get(`/api/products/${id}`);
-
-    dispatch({
-        type: CART_ADD_ITEM,
-        payload: {
-            product: data._id,
-            name: data.name,
-            image: data.image,
-            price: data.price,
-            countInStock: data.countInStock,
-            qty,
-        }
-    })
+    
+    if (action === "add") {
+        dispatch({
+            type: CART_ADD_ITEM,
+            payload: {
+                product: data._id,
+                name: data.name,
+                image: data.image,
+                price: data.price,
+                countInStock: data.countInStock,
+                qty,
+            }
+        })
+    } else if (action === "reset"){
+        dispatch({
+            type: CART_UPDATE_ITEM,
+            payload: {
+                product: data._id,
+                name: data.name,
+                image: data.image,
+                price: data.price,
+                countInStock: data.countInStock,
+                qty,
+            }
+        })
+    }
+    
 
     // save the entrie cart in localStorage after dispatch
     // we can only save strings in localStroage, need to parse back to js when we take out

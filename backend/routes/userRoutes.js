@@ -30,4 +30,6 @@ router
     .delete(protect, isAdminCheck, deleteUser)
     .get(protect, isAdminCheck, getUserById)
     .put(protect, isAdminCheck, updateUser)
+
+
 export default router;

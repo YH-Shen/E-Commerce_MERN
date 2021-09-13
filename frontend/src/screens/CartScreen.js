@@ -8,25 +8,24 @@ import { addToCart, removeFromCart } from '../actions/cartActions';
 
 const CartScreen = ({ match, location, history }) => {
     
-    const productId = match.params.id;
+    // const productId = match.params.id;
 
     //  returns the string after "?". ex: ?qty=1
     //  wants the qty number
-    const qty = location.search ? Number(location.search.split("=")[1]) : 1;
+    // const qty = location.search ? Number(location.search.split("=")[1]) : 1;
 
     const dispatch = useDispatch();
 
     const cart = useSelector(state => state.cart);
     const { cartItems } = cart;
 
-
-    useEffect(() => {
-        if (productId) {
-            dispatch(addToCart(productId, qty));
-        }
-        return () => {
-        }
-    }, [dispatch, productId, qty])
+    // useEffect(() => {
+    //     if (productId) {
+    //         dispatch(addToCart(productId, qty));
+    //     }
+    //     return () => {
+    //     }
+    // }, [dispatch, productId, qty])
 
 
     const removeFromCartHandler = (id) => {
@@ -60,7 +59,7 @@ const CartScreen = ({ match, location, history }) => {
                                     <Col md={2}>
                                         <Form.Control as="select" className="form-select" value={item.qty} 
                                                 onChange={(e) => dispatch( addToCart( item.product, 
-                                                Number(e.target.value)))} >
+                                                Number(e.target.value), "reset"))} >
                                                 {[...Array(item.countInStock).keys()].map(x => (
                                                     <option key={x + 1} value={x + 1}>{x + 1}</option>
                                                 ))}
@@ -82,7 +81,7 @@ const CartScreen = ({ match, location, history }) => {
                 <Card>
                     <ListGroup variant="flush">
                         <ListGroup.Item>
-                            <h4>Subtotal ({ cartItems.reduce((acc, item) => acc + item.qty, 0) }) 
+                            <h4>Subtotal ({ cartItems.reduce((acc, item) => acc + Number(item.qty), 0) }) 
                                 items</h4>
                             ${ cartItems.reduce((acc, item) => (acc + item.qty * item.price), 0)
                             .toFixed(2) }

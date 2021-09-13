@@ -4,6 +4,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
+// HTTP request logger middleware for node.js
+import morgan from "morgan";
 import connectDB from "./config/db.js";
 
 import productRoutes from "./routes/productRoutes.js";
@@ -16,6 +18,10 @@ connectDB();
 
 const app = express();
 
+// only run http req logger in dev mode
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan("dev"));
+}
 
 // enable reciving json data in body
 app.use(express.json());
