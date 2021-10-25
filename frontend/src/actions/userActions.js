@@ -84,7 +84,7 @@ export const logout = () => (dispatch) => {
     dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
 };
 
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (name, email, password, isAdmin = false) => async (dispatch) => {
     try {
         dispatch({
             type: USER_REGISTER_REQUEST,
@@ -99,7 +99,7 @@ export const register = (name, email, password) => async (dispatch) => {
 
         const { data } = await axios.post(
             "/api/users",
-            { name, email, password },
+            { name, email, password, isAdmin },
             config
         );
         // dispatch user_register_success after making request
