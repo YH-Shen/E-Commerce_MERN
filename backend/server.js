@@ -2,6 +2,7 @@
 // const dotenv = require("dotenv");
 // const products = require("./data/products");
 // using es modules instead of commonJS module because nodejs 14 supports
+import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
@@ -30,14 +31,28 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 
 // create route
-app.get("/", (req, res) => {
-	res.send("API is running...");
-});
+// app.get("/", (req, res) => {
+// 	res.send("API is running...");
+// });
 
 // mount product routes
 app.use("/api/products", productRoutes);
 // mount user routes
 app.use("/api/users", userRoutes);
+
+const __dirname = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+	app.get("*", (req, res) =>
+		res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+	);
+} else {
+	app.get("/", (req, res) => {
+		res.send("API is running...");
+	});
+}
 
 // custom error handling middleware
 // pass in middleware funcs into app.use()
