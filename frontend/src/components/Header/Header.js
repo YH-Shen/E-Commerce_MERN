@@ -1,7 +1,9 @@
 import React from "react";
+import { Route } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
+import SearchBox from "../SearchBox/SearchBox";
 import { LinkContainer } from "react-router-bootstrap";
 import { logout } from "../../actions/userActions";
 import "./Header.css";
@@ -25,10 +27,16 @@ const Header = () => {
         <header>
             <Navbar bg="primary" variant="dark" expand="lg" collapseOnSelect>
                 <Container>
-                    <LinkContainer to="/">
+                    <LinkContainer to="/" className="me-5">
                         <Navbar.Brand>E-Commerce</Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+                    <Route
+                        render={({ history }) => (
+                            <SearchBox history={history} />
+                        )}
+                    />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             <LinkContainer to="/cart">
