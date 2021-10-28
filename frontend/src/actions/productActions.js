@@ -9,6 +9,9 @@ import {
     PRODUCT_CREATE_REVIEW_REQUEST,
     PRODUCT_CREATE_REVIEW_SUCCESS,
     PRODUCT_CREATE_REVIEW_FAIL,
+    PRODUCT_TOP_REQUEST,
+    PRODUCT_TOP_SUCCESS,
+    PRODUCT_TOP_FAIL,
 } from "../constants/productConstants";
 
 // action creators
@@ -107,3 +110,28 @@ export const createProductReview =
             });
         }
     };
+
+export const listTopProducts = () => async (dispatch) => {
+    try {
+        dispatch({ type: PRODUCT_TOP_REQUEST });
+
+        // make request
+        const { data } = await axios.get(`/api/products/top`);
+        // if success, then:
+        dispatch({
+            type: PRODUCT_TOP_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        // if error, then:
+        dispatch({
+            type: PRODUCT_TOP_FAIL,
+            // want the backend error msg if exist,
+            // else show the generic error msg
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.response,
+        });
+    }
+};
